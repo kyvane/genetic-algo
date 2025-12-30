@@ -1,0 +1,41 @@
+<?xml version="1.0"?><robot name="pepe">
+	<link name="0">
+		<visual>
+			<geometry>
+				<cylinder length="1.2025622805338023" radius="0.2318158526325178"/>
+			</geometry>
+		</visual>
+		<collision>
+			<geometry>
+				<cylinder length="1.2025622805338023" radius="0.2318158526325178"/>
+			</geometry>
+		</collision>
+		<inertial>
+			<mass value="0.20302228609590536"/>
+			<inertia ixx="0.03" iyy="0.03" izz="0.03" ixy="0" ixz="0" iyx="0"/>
+		</inertial>
+	</link>
+	<link name="11">
+		<visual>
+			<geometry>
+				<cylinder length="0.3592873235753756" radius="0.895962890688118"/>
+			</geometry>
+		</visual>
+		<collision>
+			<geometry>
+				<cylinder length="0.3592873235753756" radius="0.895962890688118"/>
+			</geometry>
+		</collision>
+		<inertial>
+			<mass value="0.9060909899774614"/>
+			<inertia ixx="0.03" iyy="0.03" izz="0.03" ixy="0" ixz="0" iyx="0"/>
+		</inertial>
+	</link>
+	<joint name="11_to_0" type="revolute">
+		<parent link="0"/>
+		<child link="11"/>
+		<axis xyz="1 0 0"/>
+		<limit effort="1" upper="-3.1415" lower="3.1415" velocity="1"/>
+		<origin rpy="3.5845010562810176 1.1617842046722215 4.003026921447189" xyz="0.987059818500705 0.39032632471284745 0.6451813588405871"/>
+	</joint>
+</robot>
