@@ -10,12 +10,18 @@ class MotorType(Enum):
 
 class Motor:
     def __init__(self, control_waveform, control_amp, control_freq):
+        # if control_waveform <= 0.5:
+        #     self.motor_type = MotorType.PULSE
+        # else:
+        #     self.motor_type = MotorType.SINE
+            
         if control_waveform < 0.33:
             self.motor_type = MotorType.PULSE
-        if control_waveform < 0.66:
+        elif control_waveform < 0.66:
             self.motor_type = MotorType.SINE
         else:
             self.motor_type = MotorType.SAWTOOTH
+        
         self.amp = control_amp
         self.freq = control_freq
         self.phase = 0
@@ -32,7 +38,7 @@ class Motor:
         if self.motor_type == MotorType.SINE:
             output = np.sin(self.phase)
             
-        if self.motor_type == MotorType.SAWTOOTH:
+        elif self.motor_type == MotorType.SAWTOOTH:
             output = (self.phase/np.pi) - 1.0
         
         return output 
