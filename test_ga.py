@@ -24,15 +24,15 @@ import csv
 
 class TestGA(unittest.TestCase):
     def testBasicGA(self):
-        # create population of 20 creatures with 3 genes each
+        # Create population of 20 creatures with 3 genes each
         pop = population.Population(pop_size=20, 
                                     gene_count=3)
         sim = simulation.Simulation()
-        ga_results = [] # array to store all results
+        ga_results = [] # Array to store all results
 
-        for iteration in range(20): ## number of simulations to run
+        for iteration in range(20): ## Mumber of simulations to run
             for cr in pop.creatures:
-                sim.run_creature(cr, 2400) # for each creature, run for 2400 time steps (10 seconds)
+                sim.run_creature(cr, 2400) # For each creature, run for 2400 time steps (10 seconds)
             
             fits = [cr.get_distance_to_top() for cr in pop.creatures] # best fitness
             horizontal = [cr.get_horizontal_dist() for cr in pop.creatures] # get horizontal distance travelled (euclidean)
@@ -48,7 +48,7 @@ class TestGA(unittest.TestCase):
             mean_links = np.round(np.mean(links)) # mean number of links
             max_links = np.round(np.max(links)) # most links in any creature
             
-            # print results to console
+            # Print results to console
             print(iteration,
                   "fittest:", fittest, 
                   ", mean fit:", mean_fit,
@@ -56,31 +56,31 @@ class TestGA(unittest.TestCase):
                   ", mean links:", mean_links,
                   )  
             
-            # append results to array
+            # Append results to array
             ga_results.append([iteration, 
                                fittest, mean_fit, 
                                max_hori, mean_hori,
                                max_vert, mean_vert,
                                mean_links, max_links])
             
-            # invert fitnesses so lower distances (better) become higher fitness values
+            # Invert fitnesses so lower distances (better) become higher fitness values
             max_fit = max(fits) if fits else 1.0
             inverted_fits = [max_fit - f for f in fits]
             fit_map = population.Population.get_fitness_map(inverted_fits)
             new_creatures = []
             
-            # for each new creature,
+            # For each new creature,
             for i in range(len(pop.creatures)):
-                # select 2 parents using fitness map
+                # Select 2 parents using fitness map
                 p1_ind = population.Population.select_parent(fit_map)
                 p2_ind = population.Population.select_parent(fit_map)
                 p1 = pop.creatures[p1_ind]
                 p2 = pop.creatures[p2_ind]
                 
-                # combine their DNA
+                # Combine their DNA
                 dna = genome.Genome.crossover(p1.dna, p2.dna)
                 
-                # apply mutations. increase rates for more exploration, decrease for more exploitation
+                # Apply mutations. Increase rates for more exploration, decrease for more exploitation
                 dna = genome.Genome.point_mutate(dna, rate=0.1, amount=0.25)
                 dna = genome.Genome.shrink_mutate(dna, rate=0.25)
                 dna = genome.Genome.grow_mutate(dna, rate=0.1)
@@ -90,15 +90,15 @@ class TestGA(unittest.TestCase):
                 cr.update_dna(dna)
                 new_creatures.append(cr)
                 
-            # elitism -- preserve best individual (lowest distance to top)
+            # Elitism -- preserve best individual (lowest distance to top)
             best_fit = np.min(fits)
             for cr in pop.creatures:
-                if cr.get_distance_to_top() == best_fit: # finds the best fitness according to distance to mountain
+                if cr.get_distance_to_top() == best_fit: # Finds the best fitness according to distance to mountain
                     new_cr = creature.Creature(1)
                     new_cr.update_dna(cr.dna)
                     new_creatures[0] = new_cr
                     
-                    # save in elite folder
+                    # Save in elite folder
                     ga_dir = os.path.dirname(os.path.abspath(__file__))
                     elite_dir = os.path.join(ga_dir, "elite")
                     os.makedirs(elite_dir, exist_ok=True)
@@ -107,10 +107,10 @@ class TestGA(unittest.TestCase):
                     genome.Genome.to_csv(cr.dna, filename)
                     break
             
-            # replace population with the new generation
+            # Replace population with the new generation
             pop.creatures = new_creatures
 
-        # save all results to csv file
+        # Save all results to csv file
         ga_dir = os.path.dirname(os.path.abspath(__file__))
         filename = os.path.join(ga_dir, "gen_100_results.csv")
         with open(filename, 'w', newline='') as csvfile:
@@ -122,7 +122,7 @@ class TestGA(unittest.TestCase):
                                 'mean_links', 'max_links'])
             csvwriter.writerows(ga_results)
                            
-        # asserts that one creature moved
+        # Asserts that one creature moved
         self.assertNotEqual(fits[0], 0)
 
 unittest.main()

@@ -19,12 +19,9 @@ class Simulation:
         arena_size = 20
         arena_position = (0, 0, 0)  # Arena center position
         make_arena(arena_size=arena_size, position=arena_position)
-        #make_rocks(arena_size=arena_size)
         mountain_position = (0, 0, -1)  # Adjust as needed
         mountain_orientation = p.getQuaternionFromEuler((0, 0, 0))
         p.setAdditionalSearchPath('shapes/')
-        # mountain = p.loadURDF("mountain.urdf", mountain_position, mountain_orientation, useFixedBase=1)
-        # mountain = p.loadURDF("mountain_with_cubes.urdf", mountain_position, mountain_orientation, useFixedBase=1)
         mountain = p.loadURDF("gaussian_pyramid.urdf",
                               mountain_position,
                               mountain_orientation,useFixedBase=1)
@@ -40,8 +37,7 @@ class Simulation:
         # Check if creature loaded successfully (loadURDF returns -1 on failure)
         if cid < 0:
             # If creature failed to load, set a very poor position (far from mountain)
-            # This will give it a very poor fitness score
-            cr.update_position([1000, 1000, 1000])  # Far away position
+            cr.update_position([1000, 1000, 1000])
             return  # Exit early, creature is invalid
 
 # !! changed
@@ -61,8 +57,6 @@ class Simulation:
                 # If body was removed or invalid, set poor position and exit
                 cr.update_position([1000, 1000, 1000])
                 break
-            #print(pos[2])
-            #print(cr.get_distance_travelled())
         
     
     def update_motors(self, cid, cr):
@@ -90,8 +84,6 @@ class Simulation:
             # If there's an error updating motors, just skip this update
             pass
         
-
-    # You can add this to the Simulation class:
     def eval_population(self, pop, iterations):
         for cr in pop.creatures:
             self.run_creature(cr, 2400) 
@@ -107,19 +99,14 @@ class ThreadedSim():
         return cr
     
     def eval_population(self, pop, iterations):
-        """
-        pop is a Population object
-        iterations is frames in pybullet to run for at 240fps
-        """
         pool_args = [] 
         start_ind = 0
         pool_size = len(self.sims)
         while start_ind < len(pop.creatures):
             this_pool_args = []
             for i in range(start_ind, start_ind + pool_size):
-                if i == len(pop.creatures):# the end
+                if i == len(pop.creatures):
                     break
-                # work out the sim ind
                 sim_ind = i % len(self.sims)
                 this_pool_args.append([
                             self.sims[sim_ind], 
@@ -132,9 +119,6 @@ class ThreadedSim():
         new_creatures = []
         for pool_argset in pool_args:
             with Pool(pool_size) as p:
-                # it works on a copy of the creatures, so receive them
                 creatures = p.starmap(ThreadedSim.static_run_creature, pool_argset)
-                # and now put those creatures back into the main 
-                # self.creatures array
                 new_creatures.extend(creatures)
         pop.creatures = new_creatures

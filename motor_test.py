@@ -23,7 +23,7 @@ cid = p.loadURDF('test.urdf')
 p.setRealTimeSimulation(1)
 c.update_position([0, 0, 0])
 
-# set position so object will not be pushed upwards
+# Set position so object will not be pushed upwards
 p.resetBasePositionAndOrientation(cid, [0, 0, 1], [0, 0, 0, 1])
 
 

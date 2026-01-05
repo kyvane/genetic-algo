@@ -65,7 +65,6 @@ class Genome():
                 c_copy = copy.copy(c)
                 c_copy.parent_name = uniq_parent_name
                 uniq_name = c_copy.name + str(len(exp_links))
-                #print("exp: ", c.name, " -> ", uniq_name)
                 c_copy.name = uniq_name
                 c_copy.sibling_ind = sibling_ind
                 exp_links.append(c_copy)
@@ -82,7 +81,6 @@ class Genome():
             parent_ind = gdict["joint-parent"] * len(parent_names)
             assert parent_ind < len(parent_names), "genome.py: parent ind too high: " + str(parent_ind) + "got: " + str(parent_names)
             parent_name = parent_names[int(parent_ind)]
-            #print("available parents: ", parent_names, "chose", parent_name)
             recur = gdict["link-recurrence"]
             link = URDFLink(name=link_name, 
                             parent_name=parent_name, 
@@ -103,11 +101,10 @@ class Genome():
                             control_amp=gdict["control-amp"],
                             control_freq=gdict["control-freq"])
             links.append(link)
-            if link_ind != 0:# don't re-add the first link
+            if link_ind != 0:
                 parent_names.append(link_name)
             link_ind = link_ind + 1
 
-        # now just fix the first link so it links to nothing
         links[0].parent_name = "None"
         return links
 
@@ -217,23 +214,6 @@ class URDFLink:
         self.sibling_ind = 1
 
     def to_link_element(self, adom):
-        #         <link name="base_link">
-        #     <visual>
-        #       <geometry>
-        #         <cylinder length="0.6" radius="0.25"/>
-        #       </geometry>
-        #     </visual>
-        #     <collision>
-        #       <geometry>
-        #         <cylinder length="0.6" radius="0.25"/>
-        #       </geometry>
-        #     </collision>
-        #     <inertial>
-        # 	    <mass value="0.25"/>
-        # 	    <inertia ixx="0.0003" iyy="0.0003" izz="0.0003" ixy="0" ixz="0" iyz="0"/>
-        #     </inertial>
-        #   </link>
-  
         link_tag = adom.createElement("link")
         link_tag.setAttribute("name", self.name)
         vis_tag = adom.createElement("visual")
@@ -254,18 +234,12 @@ class URDFLink:
         
         c_geom_tag.appendChild(c_cyl_tag)
         coll_tag.appendChild(c_geom_tag)
-        
-        #     <inertial>
-        # 	    <mass value="0.25"/>
-        # 	    <inertia ixx="0.0003" iyy="0.0003" izz="0.0003" ixy="0" ixz="0" iyz="0"/>
-        #     </inertial>
+
         inertial_tag = adom.createElement("inertial")
         mass_tag = adom.createElement("mass")
-        # pi r^2 * height
         mass = np.pi * (self.link_radius * self.link_radius) * self.link_length
         mass_tag.setAttribute("value", str(mass))
         inertia_tag = adom.createElement("inertia")
-        # <inertia ixx="0.0003" iyy="0.0003" izz="0.0003" ixy="0" ixz="0" iyz="0"/>
         inertia_tag.setAttribute("ixx", "0.03")
         inertia_tag.setAttribute("iyy", "0.03")
         inertia_tag.setAttribute("izz", "0.03")
@@ -283,13 +257,6 @@ class URDFLink:
         return link_tag
 
     def to_joint_element(self, adom):
-        #           <joint name="base_to_sub2" type="revolute">
-        #     <parent link="base_link"/>
-        #     <child link="sub_link2"/>
-        #     <axis xyz="1 0 0"/>
-        #     <limit effort="10" upper="0" lower="10" velocity="1"/>
-        #     <origin rpy="0 0 0" xyz="0 0.5 0"/>
-        #   </joint>
         joint_tag = adom.createElement("joint")
         joint_tag.setAttribute("name", self.name + "_to_" + self.parent_name)
         if self.joint_type >= 0.5:
@@ -309,12 +276,10 @@ class URDFLink:
             axis_tag.setAttribute("xyz", "0 0 1")
         
         limit_tag = adom.createElement("limit")
-        # effort upper lower velocity
         limit_tag.setAttribute("effort", "1")
         limit_tag.setAttribute("upper", "-3.1415")
         limit_tag.setAttribute("lower", "3.1415")
         limit_tag.setAttribute("velocity", "1")
-        # <origin rpy="0 0 0" xyz="0 0.5 0"/>
         orig_tag = adom.createElement("origin")
         
         rpy1 = self.joint_origin_rpy_1 * self.sibling_ind

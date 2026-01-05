@@ -10,7 +10,6 @@ import time
 import random
 import numpy as np
 
-## ... usual starter code to create a sim and floor
 def main(csv_file):
     assert os.path.exists(csv_file), "Tried to load " + csv_file + " but it does not exists"
 
@@ -20,7 +19,8 @@ def main(csv_file):
     p.setGravity(0, 0, -10)
     
     arena_size = 20
-    arena_position = (0, 0, 0)  # Arena center position
+    # Arena center position
+    arena_position = (0, 0, 0)
 
     make_arena(arena_size = arena_size, position=arena_position)
 
@@ -28,11 +28,11 @@ def main(csv_file):
     mountain_orientation = p.getQuaternionFromEuler((0, 0, 0))
     p.loadURDF("shapes/gaussian_pyramid.urdf", mountain_position, mountain_orientation, useFixedBase=1)
 
-    # generate a random creature
+    
     cr = creature.Creature(gene_count=1)
     dna = genome.Genome.from_csv(csv_file)
     cr.update_dna(dna)
-    # save it to XML
+    
     with open('test.urdf', 'w') as f:
         f.write(cr.to_xml())
 
@@ -50,11 +50,9 @@ def main(csv_file):
                                  cameraPitch=-50,
                                  cameraTargetPosition=start_pos)
 
-    # iterate 
     elapsed_time = 0
-# !! changed mine
     wait_time = 1.0/1200  # Set to 0 for maximum speed, or use 1.0/480 for 2x speed, 1.0/1200 for 5x speed
-    total_time = 450 # seconds
+    total_time = 60 # seconds
     step = 0
     
     while True:
@@ -71,7 +69,6 @@ def main(csv_file):
                             controlMode=mode, 
                             targetVelocity=vel)
             new_pos, orn = p.getBasePositionAndOrientation(rob1)
-            #print(new_pos)
             dist_moved = np.linalg.norm(np.asarray(start_pos) - np.asarray(new_pos))
             print(dist_moved)
         time.sleep(wait_time)
@@ -105,4 +102,3 @@ def make_arena(arena_size=10, wall_height=1, position=(0, 0, 0)):
 if __name__ == "__main__":
     assert len(sys.argv) == 2, "Usage: python realtime_from_csv.py csv_filename"
     main(sys.argv[1])
-

@@ -10,17 +10,18 @@ class MotorType(Enum):
 
 class Motor:
     def __init__(self, control_waveform, control_amp, control_freq):
-        # if control_waveform <= 0.5:
-        #     self.motor_type = MotorType.PULSE
-        # else:
-        #     self.motor_type = MotorType.SINE
-            
-        if control_waveform < 0.33:
+        if control_waveform <= 0.5:
             self.motor_type = MotorType.PULSE
-        elif control_waveform < 0.66:
-            self.motor_type = MotorType.SINE
         else:
-            self.motor_type = MotorType.SAWTOOTH
+            self.motor_type = MotorType.SINE
+        
+        # # For additional motor exploration
+        # if control_waveform < 0.33:
+        #     self.motor_type = MotorType.PULSE
+        # elif control_waveform < 0.66:
+        #     self.motor_type = MotorType.SINE
+        # else:
+        #     self.motor_type = MotorType.SAWTOOTH
         
         self.amp = control_amp
         self.freq = control_freq
@@ -81,11 +82,11 @@ class Creature:
             robot_tag.appendChild(link.to_link_element(adom))
         first = True
         for link in self.exp_links:
-            if first:# skip the root node! 
+            if first:
                 first = False
                 continue
             robot_tag.appendChild(link.to_joint_element(adom))
-        robot_tag.setAttribute("name", "pepe") #  choose a name!
+        robot_tag.setAttribute("name", "pepe")
         return '<?xml version="1.0"?>' + robot_tag.toprettyxml()
 
     def get_motors(self):
@@ -110,7 +111,7 @@ class Creature:
             return 0
         p1 = np.asarray(self.start_position)
         p2 = np.asarray(self.last_position)
-        dist = np.linalg.norm(p1-p2) # euclidean distance
+        dist = np.linalg.norm(p1-p2) # Euclidean distance
         return dist 
     
     def get_horizontal_dist(self):
@@ -118,7 +119,7 @@ class Creature:
             return 0
         p1 = np.asarray(self.start_position[:2])
         p2 = np.asarray(self.last_position[:2])
-        dist = np.linalg.norm(p1-p2) # euclidean distance in horizontal plane
+        dist = np.linalg.norm(p1-p2) # Euclidean distance in horizontal plane
         return dist
     
     def get_vertical_gain(self):
@@ -126,17 +127,15 @@ class Creature:
             return 0
         z1 = self.start_position[2]
         z2 = self.last_position[2]
-        dist = abs(z2 - z1)  # absolute vertical distance
+        dist = abs(z2 - z1)  # Absolute vertical distance
         return dist
     
+    # Fitness function
     def get_distance_to_top(self, mountain_position=(0, 0, -1), mountain_height=5):
-        """
-        Distance from creature to top of mountain.
-        """
         if self.last_position is None:
             return float('inf')  # If creature hasn't moved, return infinite distance
         p1 = np.asarray(self.last_position)
-        # top of mountain
+        # Position of mountain peak
         mountain_top = np.asarray([mountain_position[0], mountain_position[1], mountain_position[2] + mountain_height])
         dist = np.linalg.norm(p1 - mountain_top)
         return dist

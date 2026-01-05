@@ -26,18 +26,17 @@ class Population:
     @staticmethod
     def select_parent(fitmap):
         if len(fitmap) == 0:
-            return 0  # Fallback if empty
+            return 0
         
         # If all fitness values are zero or negative (after shifting), use uniform random selection
         if fitmap[-1] <= 0:
             return np.random.randint(0, len(fitmap))
         
-        r = np.random.rand() # 0-1
+        r = np.random.rand()
         r = r * fitmap[-1]
         for i in range(len(fitmap)):
             if r <= fitmap[i]:
                 return i
         
-        # Fallback: return last index if no match found (shouldn't happen, but safety check)
         return len(fitmap) - 1
 
