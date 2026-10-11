@@ -1,0 +1,20 @@
+In this video about my AI genetic algorithm coursework, I will present the best performing creatures for each iteration. The fitness of these creatures are determined by its proximity to the top of the mountain, with lower proximity equating to higher fitness.
+
+These are the best performing creatures for the different generation iterations. We can see that they all are about the same complexity, but are composed differently.
+By running the simulation, we can see that the creatures in both scenarios reach a fitness plateau after a while. This tells us that the algorithm is trying different creature structures while maintaining the same amount of links, since the earlier generations’ structure was unable to climb the mountain.
+In this simulation, we discover that the creature has grown links that resemble legs. It uses these legs to travel, allowing the creature to cover a much greater horizontal distance. Eventually, the creature stumbles and falls over, and remains about the same spot for the rest of the simulation. While it does not climb the mountain, it shows that by running the algorithm for more generations, the creature can eventually develop links that can help them achieve better fitness values.
+
+Next, we compare best performing creatures from population size 20 and population size 50. The creature from population size 50 appears simple but is large in size and moves very slowly. Here, at maximum speed, its movement is slow and calculated, yet covers less distance than the creature from population size 20, which at 3 times speed, is able to cover more distance.
+This tells us that increasing the population size is not necessarily good, because it results in a sub-optimal creature despite the increased computational power required for training.
+
+Next, we compare mutation changes for point, shrink, and growth.
+We can see that point and shrink mutations result in very simple creatures that cover very little distance. On the other hand, growth mutation results in a more complex creature that was able to run almost half a lap around the mountain before reaching a plateau. This suggests that grow mutation allows the algorithm to discover more complex creatures with better fitness, while point and shrink mutations help prevent these creatures from becoming too large.
+
+
+For the advanced coursework section, I decided to add a sawtooth motor which gives the creature a jerkier movement. This is the best performing creature from the experiment. This creature has the highest amount of links we have seen so far.
+Straightaway, we can see that it is a highly complex creature that is big in size, yet it does not cover much distance. This tells us that the additional motor has allowed the algorithm to explore highly complex creatures, but it resulted in an increase in the number of links that are non-functional.
+
+From my experiments, we learn that increasing parameter values generally allow for better fitness values. However, some parameters such as increasing population size and introducing a new motor significantly impacts computation power and time needed to run the simulations. 
+
+To improve the project, we can introduce a hard constraint for the maximum number of links allowed for any given creature. This helps balance creature performance and computational stability. 
+We can also increase the number of time steps the algorithm is run for, as it would allow creatures more time to explore the environment. This might help the creatures achieve better fitness values.
