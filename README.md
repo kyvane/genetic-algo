@@ -5,8 +5,8 @@ This genetic algorithm project evolves creatures to climb a mountain, simulated 
 ## Requirements
 
 - Python 3
-- [NumPy](https://numpy.org/)
-- [PyBullet](https://pybullet.org/)
+- NumPy
+- PyBullet
 
 ## Run an evolution
 
@@ -37,5 +37,3 @@ python realtime_from_csv.py elite/elite_19.csv
 ```
 
 Replace the path with any `elite_*.csv`. The window runs for about 60 seconds and prints how far the creature moved.
-
-`motor_test.py` drops a random creature on a flat plane so you can check motor output without the mountain.
